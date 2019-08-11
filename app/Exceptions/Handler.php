@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use App\ResponseCode;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +47,17 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($this->isHttpException($exception)) {
+            switch($exception->getStatusCode()) {
+                case 404:
+                    return response()->json(ResponseCode::_404());    
+                    break;
+                case 405:
+                    return response()->json(ResponseCode::_405());
+                    break;
+            }
+        }
+
         return parent::render($request, $exception);
     }
 }

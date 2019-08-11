@@ -6,6 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class ResponseCode extends Model
 {
+    public static function _404()
+    {
+        return [
+            'response_code' => '404',
+            'response_description' => 'Not found',
+            'response_data' => '',
+        ];
+    }
+
+    public static function _405()
+    {
+        return [
+            'response_code' => '405',
+            'response_description' => 'Method Not Allowed',
+            'response_data' => '',
+        ];
+    }
+
+    public static function _500($data)
+    {
+        return [
+            'response_code' => '500',
+            'response_description' => 'Internal Server Error',
+            'response_data' => $data,
+        ];
+    }
+    
     public static function success($data)
     {
         return [
