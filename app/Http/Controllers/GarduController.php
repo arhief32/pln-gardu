@@ -16,7 +16,10 @@ class GarduController extends Controller
      */
     public function index()
     {
-        
+        $gardu = Gardu::join('gardupln_beban_sekunder', 'gardupln_gardu.id', '=', 'gardupln_beban_sekunder.gardu_id')
+        ->get();
+
+        return response()->json($gardu);
     }
 
     /**
@@ -75,8 +78,10 @@ class GarduController extends Controller
     {
         // $nama_gardu = base64_decode($nama_gardu);
         
-        $gardu = Gardu::where('nama_gardu', $nama_gardu)->first();
-        
+        $gardu = Gardu::where('gardupln_gardu.nama_gardu', $nama_gardu)
+        ->join('gardupln_beban_sekunder', 'gardupln_gardu.id', '=', 'gardupln_beban_sekunder.gardu_id')
+        ->first();
+
         if($gardu == false)
         {
             return response()->json(ResponseCode::garduFailed());
@@ -87,59 +92,7 @@ class GarduController extends Controller
         isset($gardu->waktu) ? $gardu->waktu = $gardu->waktu : $gardu->waktu = null;
         isset($gardu->date_time) ? $gardu->jam = date('H:m:s',strtotime($gardu->date_time)) : $gardu->jam = null;
 
-        $beban_sekunder = BebanSekunder::where('gardu_id', $gardu->id)->first();        
-    
-        if($beban_sekunder == false)
-        {
-            $beban_sekunder = (object)[
-                'jurusan_1_r_n' => 0,
-                'jurusan_1_s_n' => 0,
-                'jurusan_1_t_n' => 0,
-                'jurusan_1_r_s' => 0,
-                'jurusan_1_r_t' => 0,
-                'jurusan_1_s_t' => 0,
-                'jurusan_1_r_total' => 0,
-                'jurusan_1_s_total' => 0,
-                'jurusan_1_t_total' => 0,
-                'jurusan_1_n_total' => 0,
-                'jurusan_2_r_n' => 0,
-                'jurusan_2_s_n' => 0,
-                'jurusan_2_t_n' => 0,
-                'jurusan_2_r_s' => 0,
-                'jurusan_2_r_t' => 0,
-                'jurusan_2_s_t' => 0,
-                'jurusan_2_r_total' => 0,
-                'jurusan_2_s_total' => 0,
-                'jurusan_2_t_total' => 0,
-                'jurusan_2_n_total' => 0,
-                'jurusan_3_r_n' => 0,
-                'jurusan_3_s_n' => 0,
-                'jurusan_3_t_n' => 0,
-                'jurusan_3_r_s' => 0,
-                'jurusan_3_r_t' => 0,
-                'jurusan_3_s_t' => 0,
-                'jurusan_3_r_total' => 0,
-                'jurusan_3_s_total' => 0,
-                'jurusan_3_t_total' => 0,
-                'jurusan_3_n_total' => 0,
-                'jurusan_4_r_n' => 0,
-                'jurusan_4_s_n' => 0,
-                'jurusan_4_t_n' => 0,
-                'jurusan_4_r_s' => 0,
-                'jurusan_4_r_t' => 0,
-                'jurusan_4_s_t' => 0,
-                'jurusan_4_r_total' => 0,
-                'jurusan_4_s_total' => 0,
-                'jurusan_4_t_total' => 0,
-                'jurusan_4_n_total' => 0,
-                'date_time' => '',
-            ];
-        }
-        
-        return response()->json(ResponseCode::success([
-            'gardu' => $gardu,
-            'beban_sekunder' => $beban_sekunder,
-        ]));
+        return response()->json(ResponseCode::success($gardu));
     }
 
     /**
