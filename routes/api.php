@@ -17,6 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('gardu', 'GarduController@index');
 Route::post('gardu', 'GarduController@store');
 Route::get('gardu/{nama_gardu}', 'GarduController@show');
 Route::patch('gardu/{nama_gardu}', 'GarduController@update');
