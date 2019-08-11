@@ -49,11 +49,15 @@ class GarduController extends Controller
         // $gardu->waktu = $request->waktu;
         // $gardu->petugas = $request->petugas;
         // $gardu->date_time = $request->date_time;
-        $gardu->save();
-
+        
         $beban_sekunder = new BebanSekunder;
         $beban_sekunder->gardu_id = $gardu->id;
-        $beban_sekunder->save();
+        try{
+            $gardu->save();
+            $beban_sekunder->save();
+        } catch(\Exception $exception) {
+            return response()->json(ResponseCode::_500($exception->getMessage()));
+        }
 
         return response()->json(ResponseCode::insertSuccess([
             'gardu' => $gardu,
