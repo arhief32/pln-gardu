@@ -49,7 +49,7 @@ class BebanSekunder extends Model
         'jurusan_4_s_total',
         'jurusan_4_t_total',
         'jurusan_4_n_total',
-        'date_time',
+        'date_time_beban_sekunder',
     ];
 
     public $timestamps = false;

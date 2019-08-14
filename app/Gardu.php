@@ -19,7 +19,7 @@ class Gardu extends Model
         'arrester',
         'waktu',
         'petugas',
-        'date_time',
+        'date_time_gardu',
     ];
 
     public $timestamps = false;

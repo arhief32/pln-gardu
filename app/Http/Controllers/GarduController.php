@@ -118,7 +118,7 @@ class GarduController extends Controller
         $gardu = Gardu::where('nama_gardu', $nama_gardu)->first();
         $gardu->waktu = $request->waktu;
         $gardu->petugas = $request->petugas;
-        $gardu->date_time = date('Y-m-d H:i:s');
+        $gardu->date_time_gardu = date('Y-m-d H:i:s');
         $gardu->save(); 
 
         $beban_sekunder = BebanSekunder::where('gardu_id', $gardu->id)
@@ -163,7 +163,7 @@ class GarduController extends Controller
             'jurusan_4_s_total' => $request->jurusan_4_s_total,
             'jurusan_4_t_total' => $request->jurusan_4_t_total,
             'jurusan_4_n_total' => $request->jurusan_4_n_total,
-            'date_time' => date('Y-m-d H:i:s'),
+            'date_time_beban_sekunder' => date('Y-m-d H:i:s'),
         ]);
         
         return response()->json(ResponseCode::updateSuccess($beban_sekunder));
