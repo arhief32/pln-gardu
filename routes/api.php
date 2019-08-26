@@ -21,3 +21,4 @@ Route::get('gardu', 'GarduController@index');
 Route::post('gardu', 'GarduController@store');
 Route::get('gardu/{nama_gardu}', 'GarduController@show');
 Route::patch('gardu/{nama_gardu}', 'GarduController@update');
+Route::post('gardu/upload', 'GarduController@updateAll');
