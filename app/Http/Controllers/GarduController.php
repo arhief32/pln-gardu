@@ -188,6 +188,67 @@ class GarduController extends Controller
         return response()->json(ResponseCode::updateSuccess($beban_sekunder));
     }
 
+    public function updateAll(Request $request)
+    {
+        $request = $request->all();
+
+        foreach($request as $row)
+        {
+            $gardu = Gardu::where('nama_gardu', $row->nama_gardu)->first();
+            $gardu->waktu = $row->waktu;
+            $gardu->petugas = $row->petugas;
+            $gardu->date_time_gardu = date('Y-m-d H:i:s');
+            $gardu->save(); 
+    
+            $beban_sekunder = BebanSekunder::where('gardu_id', $gardu->id)
+            ->update([
+                'jurusan_1_r_n' => $row->jurusan_1_r_n,
+                'jurusan_1_s_n' => $row->jurusan_1_s_n,
+                'jurusan_1_t_n' => $row->jurusan_1_t_n,
+                'jurusan_1_r_s' => $row->jurusan_1_r_s,
+                'jurusan_1_r_t' => $row->jurusan_1_r_t,
+                'jurusan_1_s_t' => $row->jurusan_1_s_t,
+                'jurusan_1_r_total' => $row->jurusan_1_r_total,
+                'jurusan_1_s_total' => $row->jurusan_1_s_total,
+                'jurusan_1_t_total' => $row->jurusan_1_t_total,
+                'jurusan_1_n_total' => $row->jurusan_1_n_total,
+                'jurusan_2_r_n' => $row->jurusan_2_r_n,
+                'jurusan_2_s_n' => $row->jurusan_2_s_n,
+                'jurusan_2_t_n' => $row->jurusan_2_t_n,
+                'jurusan_2_r_s' => $row->jurusan_2_r_s,
+                'jurusan_2_r_t' => $row->jurusan_2_r_t,
+                'jurusan_2_s_t' => $row->jurusan_2_s_t,
+                'jurusan_2_r_total' => $row->jurusan_2_r_total,
+                'jurusan_2_s_total' => $row->jurusan_2_s_total,
+                'jurusan_2_t_total' => $row->jurusan_2_t_total,
+                'jurusan_2_n_total' => $row->jurusan_2_n_total,
+                'jurusan_3_r_n' => $row->jurusan_3_r_n,
+                'jurusan_3_s_n' => $row->jurusan_3_s_n,
+                'jurusan_3_t_n' => $row->jurusan_3_t_n,
+                'jurusan_3_r_s' => $row->jurusan_3_r_s,
+                'jurusan_3_r_t' => $row->jurusan_3_r_t,
+                'jurusan_3_s_t' => $row->jurusan_3_s_t,
+                'jurusan_3_r_total' => $row->jurusan_3_r_total,
+                'jurusan_3_s_total' => $row->jurusan_3_s_total,
+                'jurusan_3_t_total' => $row->jurusan_3_t_total,
+                'jurusan_3_n_total' => $row->jurusan_3_n_total,
+                'jurusan_4_r_n' => $row->jurusan_4_r_n,
+                'jurusan_4_s_n' => $row->jurusan_4_s_n,
+                'jurusan_4_t_n' => $row->jurusan_4_t_n,
+                'jurusan_4_r_s' => $row->jurusan_4_r_s,
+                'jurusan_4_r_t' => $row->jurusan_4_r_t,
+                'jurusan_4_s_t' => $row->jurusan_4_s_t,
+                'jurusan_4_r_total' => $row->jurusan_4_r_total,
+                'jurusan_4_s_total' => $row->jurusan_4_s_total,
+                'jurusan_4_t_total' => $row->jurusan_4_t_total,
+                'jurusan_4_n_total' => $row->jurusan_4_n_total,
+                'date_time_beban_sekunder' => date('Y-m-d H:i:s'),
+            ]);
+        }
+        
+        return response()->json(ResponseCode::updateSuccess($request));
+    }
+
     /**
      * Remove the specified resource from storage.
      *
