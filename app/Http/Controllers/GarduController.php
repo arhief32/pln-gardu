@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Gardu;
 use App\BebanSekunder;
 use App\ResponseCode;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class GarduController extends Controller
 {
@@ -14,12 +15,30 @@ class GarduController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $gardu = Gardu::join('gardupln_beban_sekunder', 'gardupln_gardu.id', '=', 'gardupln_beban_sekunder.gardu_id')
-        ->get();
+        $gardu = Gardu::join('gardupln_beban_sekunder', 'gardupln_gardu.id', '=', 'gardupln_beban_sekunder.gardu_id');
 
-        return response()->json($gardu);
+        $array_result = [];
+        foreach($gardu->get() as $row)
+        {
+            isset($row->date_time) ? $row->tanggal = date('Y-m-d',strtotime($row->date_time)) : $row->tanggal = null;
+            isset($row->petugas) ? $row->petugas = $row->petugas : $row->petugas = null;
+            isset($row->waktu) ? $row->waktu = $row->waktu : $row->waktu = null;
+            isset($row->date_time) ? $row->jam = date('H:m:s',strtotime($row->date_time)) : $row->jam = null;
+
+            array_push($array_result, $row);
+        }
+
+        $current_page = Paginator::resolveCurrentPage();
+        $column = collect($array_result);
+        $per_page = 50;
+        $current_page_items = $column->slice(($current_page - 1) * $per_page, $per_page)->all();
+        $items = new Paginator($current_page_items, count($column), $per_page);
+        $items->setPath($request->url());
+        $items->appends($request->all());
+
+        return response()->json(ResponseCode::success($items));
     }
 
     /**
