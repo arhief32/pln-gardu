@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Gardu;
 use App\BebanSekunder;
 use App\ResponseCode;
@@ -17,28 +18,35 @@ class GarduController extends Controller
      */
     public function index(Request $request)
     {
-        $gardu = Gardu::join('gardupln_beban_sekunder', 'gardupln_gardu.id', '=', 'gardupln_beban_sekunder.gardu_id');
+        $gardu = Gardu::select(
+            'gardupln_gardu.*',
+            'gardupln_beban_sekunder.*',
+            DB::raw('DATE_FORMAT(gardupln_gardu.date_time_gardu, "%Y-%m-%d") AS tanggal'),
+            DB::raw('DATE_FORMAT(gardupln_gardu.date_time_gardu, "%Y-%m-%d") AS jam')
+        )->join('gardupln_beban_sekunder', 'gardupln_gardu.id', '=', 'gardupln_beban_sekunder.gardu_id')->paginate(50);
 
-        $array_result = [];
-        foreach($gardu->get() as $row)
-        {
-            isset($row->date_time) ? $row->tanggal = date('Y-m-d',strtotime($row->date_time)) : $row->tanggal = null;
-            isset($row->petugas) ? $row->petugas = $row->petugas : $row->petugas = null;
-            isset($row->waktu) ? $row->waktu = $row->waktu : $row->waktu = null;
-            isset($row->date_time) ? $row->jam = date('H:m:s',strtotime($row->date_time)) : $row->jam = null;
+        return response()->json(ResponseCode::success($gardu));
 
-            array_push($array_result, $row);
-        }
+        // $array_result = [];
+        // foreach($gardu->get() as $row)
+        // {
+        //     isset($row->date_time) ? $row->tanggal = date('Y-m-d',strtotime($row->date_time)) : $row->tanggal = null;
+        //     isset($row->petugas) ? $row->petugas = $row->petugas : $row->petugas = null;
+        //     isset($row->waktu) ? $row->waktu = $row->waktu : $row->waktu = null;
+        //     isset($row->date_time) ? $row->jam = date('H:m:s',strtotime($row->date_time)) : $row->jam = null;
 
-        $current_page = Paginator::resolveCurrentPage();
-        $column = collect($array_result);
-        $per_page = 50;
-        $current_page_items = $column->slice(($current_page - 1) * $per_page, $per_page)->all();
-        $items = new Paginator($current_page_items, count($column), $per_page);
-        $items->setPath($request->url());
-        $items->appends($request->all());
+        //     array_push($array_result, $row);
+        // }
 
-        return response()->json(ResponseCode::success($items));
+        // $current_page = Paginator::resolveCurrentPage();
+        // $column = collect($array_result);
+        // $per_page = 50;
+        // $current_page_items = $column->slice(($current_page - 1) * $per_page, $per_page)->all();
+        // $items = new Paginator($current_page_items, count($column), $per_page);
+        // $items->setPath($request->url());
+        // $items->appends($request->all());
+
+        // return response()->json(ResponseCode::success($items));
     }
 
     /**
